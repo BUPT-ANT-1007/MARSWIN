@@ -675,7 +675,6 @@ class DehazeBlock(nn.Module):
     
 
 
-###### CSAM 立体交叉注意力模块
 class LayerNormFunction(torch.autograd.Function):
 
     @staticmethod
@@ -717,7 +716,7 @@ class LayerNorm2d(nn.Module):
 
 class CSAM(nn.Module):
     '''
-    Stereo Cross Attention Module (CSAM)
+    Cross Shot Attention Module (CSAM)
     '''
     def __init__(self, c=64):
         super().__init__()
@@ -909,11 +908,6 @@ class SwinIR(nn.Module):
         #####################################################################################################
         ################################ 3, high quality image reconstruction ################################
 
-        ###########除尘模块
-        # self.attention3 = DehazeBlock(default_conv, 180, 3)
-        # self.attention1 = DehazeBlock(default_conv, 180, 3)
-        # self.attention2 = DehazeBlock(default_conv, 180, 3)
-        # self.dusty_conv = nn.Conv2d(360, 180, 3, 1, 1)
 
         ###########CSAM
         self.fusion1 = CSAM(in_chans)
@@ -1022,15 +1016,6 @@ class SwinIR(nn.Module):
             
 
             x = self.conv_after_body(self.forward_features(x)) + x #深层特征
-            #y = self.conv_after_body(self.forward_features(y)) + y #深层特征
-            
-            #x, y = self.fusion3(x,y)
-
-            # dusty_deep_features = self.attention1(x)#此行是增加的
-            # dusty_deep_features = self.attention2(x)#此行是增加的
-            # dusty_deep_features = self.attention3(x)#此行是增加的
-            # x = torch.cat([x, dusty_deep_features],1)#此行是增加的
-            # x = self.dusty_conv(x)#此行是增加的
 
             x = self.conv_before_upsample(x)
 
